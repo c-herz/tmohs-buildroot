@@ -13,7 +13,7 @@ choice
 config BR2_GLIBC_VERSION_2_22
 	bool "2.22"
 	# Too old to build with gcc >= 6.x
-	depends on !BR2_TOOLCHAIN_GCC_AT_LEAST_6
+	# depends on !BR2_TOOLCHAIN_GCC_AT_LEAST_6
 
 config BR2_GLIBC_VERSION_2_23
 	bool "2.23"
