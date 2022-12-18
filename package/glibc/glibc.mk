@@ -86,6 +86,7 @@ define GLIBC_CONFIGURE_CMDS
 		$(if $(BR2_x86_64),--enable-lock-elision) \
 		--with-pkgversion="Buildroot" \
 		--without-cvs \
+		--disable-werror \
 		--disable-profile \
 		--without-gd \
 		--enable-obsolete-rpc \
