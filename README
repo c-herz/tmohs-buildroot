@@ -1,3 +1,61 @@
+
+Intro and Background:
+
+This repo contains a modified version of Buildroot 2022.11 that is able to build
+a development environment/toolchain for a rooted TMOHS1. You are solely responsible
+for any damages you cause to your device with any custom software you may build.
+
+
+This project was inspired by https://github.com/zefie/buildroot, but I based it off a modern 
+Buildroot release with compatibility patches added, rather than an older Buildroot with
+backports. This allows us to take advantage of the features of newer Buildroot features
+such as building a relocatable SDK. In addition, it allows us to build a modern GCC
+as our cross compiler, which improves compatibility with building most new software.
+
+In order to maintain compatibility with the TMOHS1, however, glibc 2.22 must be selected
+as the C library version, so this leads us to the rather absurd solution of linking our
+cross-gcc (v10.4.0) with a glibc 7 years older than it. In fact, this version of glibc
+is so old that I needed to patch the build process so that it would build on a modern system.
+For these reasons, we end building an extremely bizarre, "Frankenstein" armv7 cross-toolchain that
+is only really compatible with the TMOHS1.
+
+Instructions:
+
+Building the cross-toolchain: To build a SDK for cross compilation of TMOHS1-compatible binaries, 
+run 'make tmohs1_defconfig' then 'make sdk'. This should give you a .tar.gz toolchain
+in the output/images directory.
+
+Using the toolchain: 
+1. Extract the [SDK].tar.gz to a directory of your choosing
+2. 'cd' to said directory and run './relocate-sdk.sh' to fix file paths
+3. Run 'source environment-setup' to configure the build system environment
+4. Use the cross-compilation guide for software of your choosing to build it for
+the device
+
+Advice for running custom software:
+I have found it easiest to make the directories '/cache/bin' and '/cache/lib' on the TMOHS1,
+then place custom binaries produced by this toolchain (either externally sourced or from
+output/target) in /cache/bin and custom libraries in /cache/lib. /cache is mounted r/w by default 
+and is separate from the main partition of the device. To allow ld-linux to find custom shared 
+libraries, simply run 'export LD_LIBRARY_PATH=/cache/lib' on the device, and you will not have to make
+any modifications to the stock root filesystem to run custom software.
+
+
+WARNING: This fork of Buildroot has almost all of the sanity checks designed to
+catch impossible/broken configurations removed. In addition,
+it adds options to the menu that do not check for conflicting packages.
+This means that SOME CONFIGURATION COMBINATIONS MAY BE IMPOSSIBLE TO BUILD!
+If you choose to follow the instructions below to create a custom config, 
+you're on your own with any issues you may face.
+
+Several config options especially likely to break things if changed:
+- anything to do with glibc/the C library
+- anything to do with GCC
+- kernel headers
+- attempting to build a custom Linux kernel
+
+---
+
 Buildroot is a simple, efficient and easy-to-use tool to generate embedded
 Linux systems through cross-compilation.
 
@@ -7,7 +65,7 @@ Online documentation can be found at http://buildroot.org/docs.html
 
 To build and use the buildroot stuff, do the following:
 
-1) run 'make menuconfig'
+1) run 'make menuconfig' 
 2) select the target architecture and the packages you wish to compile
 3) run 'make'
 4) wait while it compiles
