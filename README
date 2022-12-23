@@ -3,14 +3,13 @@ Intro and Background:
 
 This repo contains a modified version of Buildroot 2022.11 that is able to build
 a development environment/toolchain for a rooted TMOHS1. You are solely responsible
-for any damages you cause to your device with any custom software you may build.
-
+for any damages you cause to your device with any custom software you build.
 
 This project was inspired by https://github.com/zefie/buildroot, but I based it off a modern 
-Buildroot release with compatibility patches added, rather than an older Buildroot with
-backports. This allows us to take advantage of the features of newer Buildroot features
-such as building a relocatable SDK. In addition, it allows us to build a modern GCC
-as our cross compiler, which improves compatibility with building most new software.
+Buildroot release with compatibility patches added rather than an older Buildroot with
+backports. This allows us to take advantage of newer Buildroot features such as building 
+a relocatable SDK. In addition, it allows us to build a modern GCC as our cross compiler, 
+which improves compatibility with building most new software.
 
 In order to maintain compatibility with the TMOHS1, however, glibc 2.22 must be selected
 as the C library version, so this leads us to the rather absurd solution of linking our
