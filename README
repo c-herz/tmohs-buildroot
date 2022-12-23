@@ -25,7 +25,7 @@ run 'make tmohs1_defconfig' then 'make sdk'. This should give you a .tar.gz tool
 in the output/images directory.
 
 Using the toolchain: 
-1. Extract the [SDK].tar.gz to a directory of your choosing
+1. Extract the [SDK].tar.gz to a directory of your choosing on the host (Linux) machine
 2. 'cd' to said directory and run './relocate-sdk.sh' to fix file paths
 3. Run 'source environment-setup' to configure the build system environment
 4. Use the cross-compilation guide for software of your choosing to build it for
