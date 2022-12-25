@@ -15,14 +15,20 @@ In order to maintain compatibility with the TMOHS1, however, glibc 2.22 must be 
 as the C library version, so this leads us to the rather absurd solution of linking our
 cross-gcc (v10.4.0) with a glibc 7 years older than it. In fact, this version of glibc
 is so old that I needed to patch the build process so that it would build on a modern system.
-For these reasons, we end building an extremely bizarre, "Frankenstein" armv7 cross-toolchain that
+For these reasons, we end up building an extremely bizarre, "Frankenstein" armv7 cross-toolchain that
 is only really compatible with the TMOHS1.
 
 Instructions:
 
-Building the cross-toolchain: To build a SDK for cross compilation of TMOHS1-compatible binaries, 
+Building the cross-toolchain: 
+To build a SDK for cross compilation of TMOHS1-compatible binaries, 
 run 'make tmohs1_defconfig' then 'make sdk'. This should give you a .tar.gz toolchain
 in the output/images directory.
+
+Pre-compiled versions of this SDK are also available for x86_64 and aarch64 Linux hosts
+in the "releases" section. The steps to use these are identical to if you built them yourself.
+However, they may not contain all the libraries you need to build the specific software you
+are targeting.
 
 Using the toolchain: 
 1. Extract the [SDK].tar.gz to a directory of your choosing on the host (Linux) machine
@@ -35,15 +41,18 @@ Advice for running custom software:
 I have found it easiest to make the directories '/cache/bin' and '/cache/lib' on the TMOHS1,
 then place custom binaries produced by this toolchain (either externally sourced or from
 output/target) in /cache/bin and custom libraries in /cache/lib. /cache is mounted r/w by default 
-and is separate from the main partition of the device. To allow ld-linux to find custom shared 
-libraries, simply run 'export LD_LIBRARY_PATH=/cache/lib' on the device, and you will not have to make
-any modifications to the stock root filesystem to run custom software.
+and is separate from the main partition of the device. To allow ld-linux to find any custom shared 
+libraries you've added, simply run 'export LD_LIBRARY_PATH=/cache/lib' on the device, 
+and you will be able to run custom software without any modifications to the original rootfs.
 
 
 WARNING: This fork of Buildroot has almost all of the sanity checks designed to
 catch impossible/broken configurations removed. In addition,
 it adds options to the menu that do not check for conflicting packages.
 This means that SOME CONFIGURATION COMBINATIONS MAY BE IMPOSSIBLE TO BUILD!
+
+To add custom libraries, binaries, etc. to the SDK, you can modify the tmohs1_defconfig
+by running "make menuconfig" once you already have this defconfig as your .config.
 If you choose to follow the instructions below to create a custom config, 
 you're on your own with any issues you may face.
 
